@@ -25,6 +25,14 @@ public class PlayerMovement : MonoBehaviour
 	[Tooltip("Time during which player input won't override the wall-jump bounce")]
 	public float wallJumpControlLock = 0.15f;
 
+	[Header("Dash")]
+	[Tooltip("Horizontal dash speed")]
+	public float dashSpeed = 14f;
+	[Tooltip("How long the dash lasts (seconds)")]
+	public float dashDuration = 0.12f;
+	[Tooltip("Cooldown between dashes (seconds)")]
+	public float dashCooldown = 0.8f;
+
 	private Rigidbody2D rb;
 	private Animator animator;
 	private bool isGrounded;
@@ -38,6 +46,10 @@ public class PlayerMovement : MonoBehaviour
 
 	// Input lock timer after wall jump
 	private float wallJumpLockTimer;
+
+	// Dash state
+	private bool isDashing = false;
+	private float lastDashTime = -Mathf.Infinity;
 
 	private static readonly int IsRunningHash = Animator.StringToHash("isrunning");
 	private static readonly int IsJumpingHash = Animator.StringToHash("isjumping");
@@ -74,8 +86,14 @@ public class PlayerMovement : MonoBehaviour
 
 		float moveInput = Input.GetAxis("Horizontal");
 
-		// Only allow player horizontal control when the lock isn't active
-		if (wallJumpLockTimer <= 0f)
+		// Dash input
+		if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time >= lastDashTime + dashCooldown && !isDashing)
+		{
+			StartCoroutine(Dash(moveInput));
+		}
+
+		// Only allow player horizontal control when the lock isn't active and not dashing
+		if (wallJumpLockTimer <= 0f && !isDashing)
 		{
 			rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
 
@@ -89,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
 				Flip();
 			}
 		}
-		// else: do not overwrite rb.velocity.x so bounce remains intact
+		// else: do not overwrite rb.velocity.x so bounce/dash remains intact
 
 		// Update animator values every frame (use actual velocity.x to determine running)
 		bool isRunning = Mathf.Abs(rb.velocity.x) > RunThreshold;
@@ -161,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-	private void PerformWallJump()
+	private		void PerformWallJump()
 	{
 		// Apply upward force and a small horizontal bounce away from the wall
 		int awayDir = -wallSide; // if wall is on right(+1), awayDir = -1 (left), and vice-versa
@@ -191,6 +209,30 @@ public class PlayerMovement : MonoBehaviour
 		{
 			Flip();
 		}
+	}
+
+	private IEnumerator Dash(float moveInput)
+	{
+		if (isDashing) yield break;
+
+		isDashing = true;
+		lastDashTime = Time.time;
+
+		// Determine dash direction: prefer input direction, otherwise dash towards facing direction
+		int dir;
+		if (Mathf.Abs(moveInput) > RunThreshold)
+			dir = moveInput > 0 ? 1 : -1;
+		else
+			dir = facingRight ? 1 : -1;
+
+		// Apply dash velocity (preserve vertical velocity)
+		rb.velocity = new Vector2(dir * dashSpeed, rb.velocity.y);
+
+		// Optionally: update animator state here if desired
+
+		yield return new WaitForSeconds(dashDuration);
+
+		isDashing = false;
 	}
 
 	private void Flip()

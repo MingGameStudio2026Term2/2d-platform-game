@@ -2256,7 +2256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeText: {fileID: 10924410}
   player: {fileID: 0}
-  startTime: 5
+  startTime: 100
 --- !u!4 &1833232207
 Transform:
   m_ObjectHideFlags: 0
