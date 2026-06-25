@@ -121,11 +121,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e2017b6051d4f4183c05246c5c87c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  speed: 5
+  jumpForce: 7
+  maxJumps: 2
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheckDistance: 0.6
+  wallSlideSpeed: -2
+  wallJumpUpForce: 7
+  wallBounceHorizontal: 4
+  wallJumpControlLock: 0.15
   dashSpeed: 12
   dashDuration: 0.15
   dashCooldown: 1
-  preserveVerticalVelocity: 1
 --- !u!50 &206081134001099804
 Rigidbody2D:
   serializedVersion: 4
@@ -185,6 +194,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.028570913, y: -0.28342995}
-  m_Size: {x: 1.576807, y: 1.8595556}
+  m_Offset: {x: 0.028570913, y: -0.17664942}
+  m_Size: {x: 1.5768096, y: 1.645997}
   m_Direction: 0

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/time UP.unity
     guid: b946040ba224fa246b2d49b349a13a4b
+  - enabled: 1
+    path: Assets/Scenes/level a 2.unity
+    guid: f2b8067ace0fd0442b750bcd134505a6
   m_configObjects: {}

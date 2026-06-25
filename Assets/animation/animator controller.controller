@@ -64,7 +64,7 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: isonground
     m_EventTreshold: 0
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: isrunning
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
