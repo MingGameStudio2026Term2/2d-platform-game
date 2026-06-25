@@ -29,8 +29,6 @@ public class platformcontroller: MonoBehaviour
     [Header("Platform Parent")]
     [Tooltip("If true, player becomes child of platform while touching it")]
     public bool useParenting = true;
-    [Tooltip("Distance threshold to detach player (if player moves away from platform)")]
-    public float detachDistance = 1f;
 
     // internal
     private Vector3 _posA;
@@ -40,7 +38,6 @@ public class platformcontroller: MonoBehaviour
     private float _waitTimer;
 
     // player parenting
-    private Transform attachedPlayer;
     private Vector3 attachedPlayerLocalPos;
 
     private const float ArriveThreshold = 0.01f;
@@ -116,15 +113,6 @@ public class platformcontroller: MonoBehaviour
             }
         }
 
-        // Check if attached player has moved away
-        if (attachedPlayer != null && useParenting)
-        {
-            float distanceToPlayer = Vector3.Distance(transform.position, attachedPlayer.position);
-            if (distanceToPlayer > detachDistance)
-            {
-                DetachPlayer();
-            }
-        }
     }
     
 
@@ -145,7 +133,7 @@ public class platformcontroller: MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Player") && useParenting)
 		{
-			DetachPlayer();
+			DetachPlayer(collision.gameObject.transform);
 			return;
 		}
 	}
@@ -155,9 +143,9 @@ public class platformcontroller: MonoBehaviour
         player.SetParent(transform);
     }
 
-    private void DetachPlayer()
+    private void DetachPlayer(Transform player)
     {
-        attachedPlayer.SetParent(null);
+		player.SetParent(null);
     }
 
     private void OnDrawGizmosSelected()
