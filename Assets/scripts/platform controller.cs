@@ -126,48 +126,38 @@ public class platformcontroller: MonoBehaviour
             }
         }
     }
+    
 
     // Destroy objects that contact the saw based on tag and collision mode
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (!useTrigger) return;
 
         // Check if it's the player (don't destroy, attach instead)
-        if (other.CompareTag("Player") && useParenting)
+        if (other.gameObject.CompareTag("Player") && useParenting)
         {
-            AttachPlayer(other.transform);
+            AttachPlayer(other.gameObject.transform);
             return;
-        }
-
-        // Destroy objects with the specified tag
-        if (string.IsNullOrEmpty(destroyOnContactTag)) return;
-        if (other.CompareTag(destroyOnContactTag))
-        {
-            Destroy(other.gameObject);
         }
     }
 
-    private void AttachPlayer(Transform player)
+	private void OnCollisionExit2D(Collision2D collision)
+	{
+		if (collision.gameObject.CompareTag("Player") && useParenting)
+		{
+			DetachPlayer();
+			return;
+		}
+	}
+
+	private void AttachPlayer(Transform player)
     {
-        if (attachedPlayer == player) return; // Already attached
-
-        // If a different player was attached, detach it first
-        if (attachedPlayer != null)
-        {
-            DetachPlayer();
-        }
-
-        attachedPlayer = player;
-        attachedPlayerLocalPos = player.localPosition;
         player.SetParent(transform);
     }
 
     private void DetachPlayer()
     {
-        if (attachedPlayer == null) return;
-
         attachedPlayer.SetParent(null);
-        attachedPlayer = null;
     }
 
     private void OnDrawGizmosSelected()
