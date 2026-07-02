@@ -84,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
 			wallJumpLockTimer -= Time.deltaTime;
 		}
 
-		float moveInput = Input.GetAxis("Horizontal");
+		float moveInput = Input.GetAxis("Horizontal")+SimpleInput.GetAxis("Horizontal2");
 
 		// Dash input
 		if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time >= lastDashTime + dashCooldown && !isDashing)
@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 
 		// Jump input handling
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.Space) || SimpleInput.GetButtonDown("Jump2"))
 		{
 			// If touching wall (and not grounded) perform wall jump that bounces away
 			if (isTouchingWall && !isGrounded)
